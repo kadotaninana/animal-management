@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserRegistrationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,3 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('animal', AnimalManagementController::class);
+
+
+Route::post('user/register', [UserRegistrationController::class, 'register']);

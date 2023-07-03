@@ -1,0 +1,5 @@
+{
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
+    "eslint.format.enable": false,
+    "editor.formatOnSave": true,
+}
