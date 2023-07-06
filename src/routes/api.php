@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserRegistrationController;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +17,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+
+Route::middleware('auth:sanctum')->get('/animal_management', function (Request $request) {
     return $request->user();
 });
 
@@ -23,3 +26,9 @@ Route::apiResource('animal', AnimalManagementController::class);
 
 
 Route::post('user/register', [UserRegistrationController::class, 'register']);
+
+
+Route::post('user/login', [AuthController::class, 'login']);
+
+
+Route::post('user/logout', [AuthController::class, 'logout']);

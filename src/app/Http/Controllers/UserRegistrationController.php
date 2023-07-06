@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Http\Requests\UserRegistrationRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UserRegistrationController extends Controller
 {
@@ -19,7 +20,7 @@ class UserRegistrationController extends Controller
             User::create([
                 "name" => $request->name,
                 "email" => $request->email,
-                "password" => $request->password,
+                'password' => Hash::make($request->password),
             ]);
 
             return response()->json(['message' => '登録完了']);
