@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class FoodHistory extends Model
 {
     use HasFactory;
+    protected $table = 'food_histories';
+
+    protected $fillable = [
+        'food_name',
+        'food_quantity',
+        'unit',
+        'latest_flag',
+        'timestamp',
+        'start_at',
+        'version',
+    ];
 }

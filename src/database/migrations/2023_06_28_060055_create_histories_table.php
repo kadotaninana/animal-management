@@ -19,12 +19,11 @@ class CreateHistoriesTable extends Migration
             $table->text('memo');
             $table->boolean('latest_flag')->default(true);
             $table->unsignedBigInteger('animal_information_id');
+            $table->unsignedBigInteger('version');
             $table->dateTime('start_at')->nullable();
             $table->dateTime('end_at')->nullable();
             $table->timestamps();
             $table->foreign('animal_information_id')->references('id')->on('animal_informations')->onDelete('cascade');
-
-
         });
     }
 

@@ -19,6 +19,7 @@ class CreateBodyWeightHistoryTable extends Migration
             $table->string('unit');
             $table->boolean('latest_flag')->default(true);
             $table->unsignedBigInteger('animal_information_id');
+            $table->unsignedBigInteger('version');
             $table->dateTime('start_at')->nullable();
             $table->dateTime('end_at')->nullable();
             $table->timestamps();

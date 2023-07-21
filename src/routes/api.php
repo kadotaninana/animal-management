@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnimalManagementController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserRegistrationController;
 use Illuminate\Auth\Events\Login;
@@ -32,3 +33,5 @@ Route::post('user/login', [AuthController::class, 'login']);
 
 
 Route::post('user/logout', [AuthController::class, 'logout']);
+
+// Route::post('api/animal', [AuthController::class, 'store']);
