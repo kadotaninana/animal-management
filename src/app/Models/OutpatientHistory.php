@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class OutpatientHistory extends Model
 {
     use HasFactory;
+    protected $table = 'outpatient_histories';
+
+    protected $fillable = [
+        'hospital_name',
+        'memo',
+        'latest_flag',
+        'timestamp',
+        'start_at',
+        'version',
+    ];
 }
