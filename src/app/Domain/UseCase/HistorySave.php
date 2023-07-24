@@ -1,18 +1,11 @@
 <?php
 
-namespace App\Domain\Service;
+namespace App\Domain\UseCase;
 
-use GuzzleHttp\Psr7\Request;
-use Illuminate\Http\Client\Request as ClientRequest;
-use Illuminate\Http\Request as HttpRequest;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Request as FacadesRequest;
-use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
-use App\Models\BodyWeightHistory;
 use App\Models\HistoryModel;
 use Carbon\Carbon;
 
-class HistorySaveService
+class HistorySave
 {
     /**
      * 履歴保存
