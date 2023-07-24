@@ -6,6 +6,7 @@ use App\Domain\UseCase\HistorySave;
 use App\Domain\ValueObject\BirthDate;
 use App\Domain\ValueObject\Medicine\MedicineList;
 use App\Domain\ValueObject\Medicine\UseStartDate;
+use App\Http\Requests\HistorySaveRequest;
 use App\Models\AnimalInformation;
 use App\Models\BodyWeightHistory;
 use App\Models\FoodHistory;
@@ -94,11 +95,11 @@ class AnimalManagementController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(HistorySaveRequest $request, $id)
     {
 
         DB::transaction(function () use ($request, $id) {
-            $this->historySaveService->save(MedicineList::create($request->input('medicine_histories')), $id, new MedicineHistory());
+            $this->historySaveService->save($request->input('medicine_histories'), $id, new MedicineHistory());
         });
 
         return response()->json(['message' => '登録完了']);
