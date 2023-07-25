@@ -9,4 +9,9 @@ class AnimalInformation extends Model
 {
     use HasFactory;
     protected $table = 'animal_informations';
+
+    public function medicineHistories()
+    {
+        return $this->hasMany(MedicineHistory::class);
+    }
 }
