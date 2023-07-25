@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OutpatientHistory extends Model
+class OutpatientHistory extends HistoryModel
 {
     use HasFactory;
     protected $table = 'outpatient_histories';

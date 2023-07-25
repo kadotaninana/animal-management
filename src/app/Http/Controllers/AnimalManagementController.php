@@ -12,9 +12,12 @@ use App\Models\AnimalInformation;
 use App\Models\BodyWeightHistory;
 use App\Models\FoodHistory;
 use App\Models\MedicineHistory;
+use App\Models\OutpatientHistory;
 use App\Models\User;
+use App\Models\VaccinationHistory;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AnimalManagementController extends Controller
@@ -25,6 +28,7 @@ class AnimalManagementController extends Controller
         private AnimalInformationSave $animalInformationSave
     ) {
     }
+
     /**
      * ログインユーザーの飼っている動物を取得
      *
@@ -33,7 +37,7 @@ class AnimalManagementController extends Controller
     public function index()
     {
         //ログインユーザーのanimalinfoテーブルから名前、誕生日、年齢を取得
-        $animalInformations = AnimalInformation::select('animal_name', 'birthday', 'age')->where('user_id', 1)->get();
+        $animalInformations = AnimalInformation::select('animal_name', 'birthday', 'age')->where('user_id', Auth::id())->get();
         // レスポンスを返す
         return response()->json(['animal_info' => $animalInformations]);
     }
@@ -73,7 +77,7 @@ class AnimalManagementController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 動物基本情報の取得
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -81,13 +85,30 @@ class AnimalManagementController extends Controller
     public function show($id)
     {
         // データ取得
-        $animalInformation = AnimalInformation::with(["medicineHistories"])->find($id);
+        $animalInformation = AnimalInformation::with([
+            "medicineHistories" => function ($query) {
+                $query->where('version', MedicineHistory::max("version"));
+            },
+            "bodyWeightHistory" => function ($query) {
+                $query->where('version', BodyWeightHistory::max("version"));
+            },
+            "foodHistories" => function ($query) {
+                $query->where('version', FoodHistory::max("version"));
+            },
+            "outpatientHistories" => function ($query) {
+                $query->where('version', OutpatientHistory::max("version"));
+            },
+            "vaccinationHistories" => function ($query) {
+                $query->where('version', VaccinationHistory::max("version"));
+            },
+
+        ])->find($id);
         // レスポンスを返す
         return response()->json(['animal_info' => $animalInformation]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * 履歴の更新
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -98,6 +119,10 @@ class AnimalManagementController extends Controller
 
         DB::transaction(function () use ($request, $id) {
             $this->historySave->save($request->input('medicine_histories'), $id, new MedicineHistory());
+            $this->historySave->save($request->input('outpatient_Histories'), $id, new OutpatientHistory());
+            $this->historySave->save($request->input('body_weight_history'), $id, new BodyWeightHistory());
+            $this->historySave->save($request->input('food_histories'), $id, new FoodHistory());
+            $this->historySave->save($request->input('vaccination_histories'), $id, new VaccinationHistory());
         });
 
         return response()->json(['message' => '登録完了']);

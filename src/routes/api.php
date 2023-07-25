@@ -19,21 +19,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('animal', AnimalManagementController::class);
 
-Route::middleware('auth:sanctum')->get('/animal_management', function (Request $request) {
-    return $request->user();
+    Route::get('/medicine_histories/{animalInformationId}', [HistoryFetchController::class, 'fetchMedicineHistory']);
+
+    Route::get('/outpatient_histories/{animalInformationId}', [HistoryFetchController::class, 'fetchOutpatientHistory']);
+
+    Route::get('/body_weight_histories/{animalInformationId}', [HistoryFetchController::class, 'fetchBodyWeightHistory']);
+
+    Route::get('/food_histories/{animalInformationId}', [HistoryFetchController::class, 'fetchFoodHistory']);
+
+    Route::get('/vaccination_histories/{animalInformationId}', [HistoryFetchController::class, 'fetchVaccinationHistory']);
 });
-
-Route::apiResource('animal', AnimalManagementController::class);
 
 Route::post('user/register', [UserRegistrationController::class, 'register']);
 
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('user/login', [AuthController::class, 'login']);
-
-
-Route::post('user/logout', [AuthController::class, 'logout']);
-
-// Route::post('api/animal', [AuthController::class, 'store']);
-
-Route::get('/medicine_histories/{animalInformationId}', [HistoryFetchController::class, 'fetchMedicineHistory']);
+Route::post('/logout', [AuthController::class, 'logout']);
