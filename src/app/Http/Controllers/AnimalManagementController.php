@@ -85,7 +85,10 @@ class AnimalManagementController extends Controller
      */
     public function show($id)
     {
-        //
+        // データ取得
+        $animalInformation = AnimalInformation::with(["medicineHistories"])->find($id);
+        // レスポンスを返す
+        return response()->json(['animal_info' => $animalInformation]);
     }
 
     /**
