@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\UseCase\AnimalInformationSave;
 use App\Domain\UseCase\HistorySave;
 use App\Domain\ValueObject\BirthDate;
 use App\Domain\ValueObject\Medicine\MedicineList;
@@ -11,26 +12,30 @@ use App\Models\AnimalInformation;
 use App\Models\BodyWeightHistory;
 use App\Models\FoodHistory;
 use App\Models\MedicineHistory;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class AnimalManagementController extends Controller
 {
-    protected $historySaveService;
 
-    public function __construct(HistorySave $historySaveService)
-    {
-        $this->historySaveService = $historySaveService;
+    public function __construct(
+        private HistorySave $historySave,
+        private AnimalInformationSave $animalInformationSave
+    ) {
     }
     /**
-     * Display a listing of the resource.
+     * ログインユーザーの飼っている動物を取得
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        //ログインユーザーのanimalinfoテーブルから名前、誕生日、年齢を取得
+        $animalInformations = AnimalInformation::select('animal_name', 'birthday', 'age')->where('user_id', 1)->get();
+        // レスポンスを返す
+        return response()->json(['animal_info' => $animalInformations]);
     }
 
     /**
@@ -52,18 +57,8 @@ class AnimalManagementController extends Controller
                 'body_weight' => 'required|numeric'
             ]);
 
-            //年齢を自動出力
-            $birthDate = new BirthDate($request->birthday);
-            $age = $birthDate->age();
-
-            //データベースに動物基本情報を登録
-            $animalInformation = new AnimalInformation;
-            $animalInformation->animal_name = $request->animal_name;
-            $animalInformation->birthday = $request->birthday;
-            $animalInformation->age = $age;
-            $animalInformation->came = $request->came;
-            $animalInformation->user_id = "1";
-            $animalInformation->save();
+            // var_dump($request->all());
+            $animalInformationId = $this->animalInformationSave->save($request->all());
 
             // 体重履歴の保存
             $param = [
@@ -71,7 +66,7 @@ class AnimalManagementController extends Controller
                 'body_weight' => $request->body_weight,
                 'unit' => $request->unit,
             ];
-            $this->historySaveService->save($param, $animalInformation->id, new BodyWeightHistory());
+            $this->historySave->save($param, $animalInformationId, new BodyWeightHistory());
         });
 
         return response()->json(['message' => '登録完了']);
@@ -102,7 +97,7 @@ class AnimalManagementController extends Controller
     {
 
         DB::transaction(function () use ($request, $id) {
-            $this->historySaveService->save($request->input('medicine_histories'), $id, new MedicineHistory());
+            $this->historySave->save($request->input('medicine_histories'), $id, new MedicineHistory());
         });
 
         return response()->json(['message' => '登録完了']);
