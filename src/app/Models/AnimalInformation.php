@@ -14,4 +14,24 @@ class AnimalInformation extends Model
     {
         return $this->hasMany(MedicineHistory::class);
     }
+
+    public function bodyWeightHistory()
+    {
+        return $this->hasMany(bodyWeightHistory::class);
+    }
+
+    public function foodHistories()
+    {
+        return $this->hasMany(foodHistory::class);
+    }
+
+    public function outpatientHistories()
+    {
+        return $this->hasMany(outpatientHistory::class);
+    }
+
+    public function vaccinationHistories()
+    {
+        return $this->hasMany(vaccinationHistory::class);
+    }
 }

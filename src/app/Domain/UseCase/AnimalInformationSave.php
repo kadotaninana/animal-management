@@ -4,6 +4,7 @@ namespace App\Domain\UseCase;
 
 use App\Domain\ValueObject\BirthDate;
 use App\Models\AnimalInformation;
+use Illuminate\Support\Facades\Auth;
 
 class AnimalInformationSave
 {
@@ -24,7 +25,7 @@ class AnimalInformationSave
         $animalInformation->birthday = $params['birthday'];
         $animalInformation->age = $age;
         $animalInformation->came = $params['came'];
-        $animalInformation->user_id = "1";
+        $animalInformation->user_id = Auth::id();
         $animalInformation->save();
 
         return $animalInformation->id;

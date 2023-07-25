@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -12,8 +14,13 @@ class AuthController extends Controller
         //認証ボタンが押されたらデータベースと照合
         if (Auth::attempt($request->only(["email", "password"]))) {
 
-            //emailとパスワードがデータベースと一致したらステータス２００でログイン情報を返す
-            return response()->json(['message' => 'ログイン成功'], 200);
+            $user = User::whereEmail($request->email)->first(); //トークンの作成と取得
+
+            $user->tokens()->delete();
+            $token = $user->createToken("auth-token")->plainTextToken;
+
+            //ログインが成功するとtokenを返す。
+            return response()->json(['token' => $token], Response::HTTP_OK);
         } else {
             // 失敗したら、401を返す。
             return response()->json(['message' => 'ログイン失敗'], 401);

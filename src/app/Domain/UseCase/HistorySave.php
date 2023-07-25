@@ -9,9 +9,14 @@ class HistorySave
 {
     /**
      * 履歴保存
+     * @param array|null $request
+     * @param int $animalInformationId
+     * @param HistoryModel $historyModel
      */
-    public function save($request, $animalInformationId, HistoryModel $historyModel)
+    public function save($request, $animalInformationId, $historyModel)
     {
+        if (is_null($request)) return;
+
         $alreadyHistory = (clone $historyModel)->where('latest_flag', '=', true)
             ->where('animal_information_id', '=', $animalInformationId)
             ->orderBy('version', 'DESC')
